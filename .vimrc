@@ -46,9 +46,7 @@
 " Sets how many lines of history VIM has to remember
 set history=500
 
-" Enable filetype plugins
-execute pathogen#infect()  
-
+"Vundle configuration starts
 set nocompatible              " be iMproved, required
 filetype off                  " required
 
@@ -61,14 +59,22 @@ call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 " NERDtree plugin
 Plugin 'scrooloose/nerdtree'
+" Vinegar plugin 
+Plugin 'tpope/vim-vinegar'
 " fzf plugin
 Plugin 'junegunn/fzf'
-" YouCompleteMe plugin
-Plugin 'Valloric/YouCompleteMe'
 " Color scheme solarized
 Plugin 'altercation/vim-colors-solarized'
 " tcomment plugin
 Plugin 'tomtom/tcomment_vim'
+" YouCompleteMe plugin
+Plugin 'Valloric/YouCompleteMe'
+" umimpaired plugin
+Plugin 'tpope/vim-unimpaired'
+" ctrlp plugin
+Plugin 'kien/ctrlp.vim'
+" esaymotion plugin
+Plugin 'easymotion/vim-easymotion'
 
 " " plugin on GitHub repo
 " Plugin 'tpope/vim-fugitive'
@@ -87,7 +93,19 @@ Plugin 'tomtom/tcomment_vim'
 "
 " " All of your Plugins must be added before the following line
 call vundle#end()            " required
-filetype plugin indent on
+filetype plugin indent on    " required
+" To ignore plugin indent changes, instead use:
+"filetype plugin on
+"
+" Brief help
+" :PluginList       - lists configured plugins
+" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
+" :PluginSearch foo - searches for foo; append `!` to refresh local cache
+" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
+"
+" see :h vundle for more details or wiki for FAQ
+" Put your non-Plugin stuff after this line
+"Vundle configuration ends
 
 " Set to auto read when a file is changed from the outside
 set autoread
@@ -112,6 +130,9 @@ command W w !sudo tee % > /dev/null
 if has('mouse')
     set mouse=a
 endif
+
+" Vinegar work with Netrw
+let NERDTreeHijackNetrw = 0
 
 "enable the line number
 set number
@@ -178,8 +199,9 @@ set t_vb=
 set tm=500
 
 " Add a bit extra margin to the left
-set foldcolumn=1
-
+set foldmethod=indent
+set foldcolumn=2
+autocmd BufRead * normal zR
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Colors and Fonts
@@ -211,7 +233,7 @@ set ffs=unix,dos,mac
 set nobackup
 set nowb
 set noswapfile
-
+"set directory=$HOME/.vim/swap//
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Text, tab and indent related
@@ -266,8 +288,9 @@ map <leader>bd :Bclose<cr>:tabclose<cr>gT
 " Close all the buffers
 map <leader>ba :bufdo bd<cr>
 
-map <leader>l :bnext<cr>
-map <leader>h :bprevious<cr>
+" Use plugin unimpaired
+" map <leader>l :bnext<cr>
+" map <leader>h :bprevious<cr>
 
 " Useful mappings for managing tabs
 map <leader>tn :tabnew<cr>
