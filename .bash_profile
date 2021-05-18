@@ -37,7 +37,7 @@ export GIT_PS1_SHOWDIRTYSTATE=1
 # '\$(__git_ps1)' adds git-related stuff
 #export PS1="$purple\u$green\$(__git_ps1)$blue \W $ $reset"
 
-export PS1="________________________________________________________________________________\n| $blue\w $green\$(__git_ps1) $reset@ \h (\u) \n| => "
+export PS1="________________________________________________________________________________\n| $blue\w $green\$(__git_ps1) $reset@ \h (\u) \n\$(iterm2_prompt_mark)| => "
 export PS2="| => "
 
 #   Set Paths
@@ -47,18 +47,18 @@ export PS2="| => "
 
 #   Set Default Editor (change 'vim' to the editor of your choice)
 #   ------------------------------------------------------------
-    export EDITOR=/usr/bin/vim
+export EDITOR=/usr/bin/vim
 
 #   Set default blocksize for ls, df, du
 #   from this: http://hints.macworld.com/comment.php?mode=view&cid=24491
 #   ------------------------------------------------------------
-    export BLOCKSIZE=1k
+export BLOCKSIZE=1k
 
 #   Add color to terminal
 #   (this is all commented out as I use Mac Terminal Profiles)
 #   from http://osxdaily.com/2012/02/21/add-color-to-the-terminal-in-mac-os-x/
 #   ------------------------------------------------------------
-    export CLICOLOR=1
+export CLICOLOR=1
 #   export LSCOLORS=ExFxBxDxCxegedabagacad
 
 
@@ -69,6 +69,8 @@ export PS2="| => "
 alias aub_eng='ssh -X rzg0022@gate.eng.auburn.edu'
 alias al_uv='ssh aubrxg@uv.asc.edu'
 alias al_dmc='ssh aubrxg@dmc.asc.edu'
+alias localpy='/usr/local/bin/python3'
+alias localpip='/usr/local/bin/pip3'
 
 alias cp='cp -iv'                           # Preferred 'cp' implementation
 alias mv='mv -iv'                           # Preferred 'mv' implementation
@@ -104,15 +106,20 @@ alias lr='ls -R | grep ":$" | sed -e '\''s/:$//'\'' -e '\''s/[^-][^\/]*\//--/g'\
 #   mans:   Search manpage given in agument '1' for term given in argument '2' (case insensitive)
 #           displays paginated result with colored search terms and two lines surrounding each hit.             Example: mans mplayer codec
 #   --------------------------------------------------------------------
-    mans () {
-        man $1 | grep -iC2 --color=always $2 | less
-    }
+mans () {
+    man $1 | grep -iC2 --color=always $2 | less
+}
 
 #   showa: to remind yourself of an alias (given some part of it)
 #   ------------------------------------------------------------
-    showa () { /usr/bin/grep --color=always -i -a1 $@ ~/Library/init/bash/aliases.bash | grep -v '^\s*$' | less -FSRXc ; }
+showa () { 
+    /usr/bin/grep --color=always -i -a1 $@ ~/Library/init/bash/aliases.bash | grep -v '^\s*$' | less -FSRXc ; 
+}
 
-
+#  fzfp: Try highlight, coderay, rougify in turn, then fall back to cat
+fzfp () {
+    fzf --preview '[[ $(file --mime {}) =~ binary ]] && echo {} is a binary file || (highlight -O ansi -l {} || coderay {} || rougify {} || cat {}) 2> /dev/null | head -500'
+}
 #   -------------------------------
 #   3.  FILE AND FOLDER MANAGEMENT
 #   -------------------------------
@@ -125,21 +132,21 @@ alias make10mb='mkfile 10m ./10MB.dat'      # make10mb:     Creates a file of 10
 
 #   cdf:  'Cd's to frontmost window of MacOS Finder
 #   ------------------------------------------------------
-    cdf () {
-        currFolderPath=$( /usr/bin/osascript <<EOT
+cdf () {
+    currFolderPath=$( /usr/bin/osascript <<EOT
             tell application "Finder"
                 try
             set currFolder to (folder of the front window as alias)
                 on error
             set currFolder to (path to desktop folder as alias)
-                end try
+        end try
                 POSIX path of currFolder
             end tell
 EOT
-        )
-        echo "cd to \"$currFolderPath\""
-        cd "$currFolderPath"
-    }
+)
+echo "cd to \"$currFolderPath\""
+cd "$currFolderPath"
+}
 
 #   extract:  Extract most know archives with one command
 #   ---------------------------------------------------------
@@ -318,3 +325,35 @@ httpHeaders () { /usr/bin/curl -I -L $@ ; }             # httpHeaders:      Grab
 
 source ${HOME}/.bashrc
 test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shell_integration.bash"
+# added by Anaconda3 5.3.0 installer
+# >>> conda init >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$(CONDA_REPORT_ERRORS=false '/anaconda3/bin/conda' shell.bash hook 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    \eval "$__conda_setup"
+else
+    if [ -f "/anaconda3/etc/profile.d/conda.sh" ]; then
+# . "/anaconda3/etc/profile.d/conda.sh"  # commented out by conda initialize
+        CONDA_CHANGEPS1=false conda activate base
+    else
+        \export PATH="/anaconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda init <<<
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/Users/ruiguo/anaconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/Users/ruiguo/anaconda3/etc/profile.d/conda.sh" ]; then
+        . "/Users/ruiguo/anaconda3/etc/profile.d/conda.sh"
+    else
+        export PATH="/Users/ruiguo/anaconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
+
